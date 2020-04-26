@@ -3,19 +3,16 @@ import {
   BrowserRouter,
   Route,
 } from "react-router-dom";
+import Login from "./screens/Login"
 
 export default function Routes () {
     return (
         <BrowserRouter>
             <switch>
                 <Route path="/">
-                    <Home/>
+                    <Login/>
                 </Route>                
             </switch>
         </BrowserRouter>
     );
 }
-
-function Home() {
-    return <h2>Login Screen</h2>;
-  }

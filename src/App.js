@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import Routes from './router';
+import CssBaseline from "@material-ui/core/CssBaseline";
 
 class App extends Component {
     render() {
         return (
-            <div>
-                <Routes/>  
-            </div>
+            <CssBaseline>
+                <div>
+                    <Routes/>  
+                </div>
+            </CssBaseline>
         );      
     }
 }
