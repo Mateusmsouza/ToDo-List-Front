@@ -1,6 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { FormControl, FormHelperText, Input } from '@material-ui/core';
+import { FormControl, FormHelperText, Button } from '@material-ui/core';
 import TextField from "@material-ui/core/TextField";
 import Switch from '@material-ui/core/Switch';
 
@@ -27,9 +27,13 @@ const useStyles = makeStyles({
     titleLogin: {
         textAligns: 'center',
         marginBottom: 10,
-        fontStyle: 'italic',
-        color: 'black',
-        textShadow: '0 1px 2px rgba(black,.15)'
+        textShadow: '0px 1px 1px black'
+    },
+    buttonBox: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        paddingTop: 8
     }
 })
 
@@ -47,23 +51,17 @@ const Login = props => {
         <div className={classes.background} >
             <div className={classes.loginBox}>
                 <h1 className={classes.titleLogin}>Faire</h1>
-                
-                {/* 
-                {state.hasAccount ? null : <TextField label="Email"/>}
-                <TextField label="Usuário"/>
-                <TextField label="Senha"/>
-                <Switch
-                checked={state.hasAccount}
-                onChange={handleChange}
-                color="primary"
-                name="hasAccount"
-                inputProps={{ 'aria-label': 'primary checkbox' }}
-                /> */}
                 <FormControl>
-                    <FormHelperText id="welcome-text">Simple ToDoList App</FormHelperText>
+                    <FormHelperText variant="filled"  id="welcome-text">Simple ToDoList App</FormHelperText>
                     <TextField label="User"/>
                     <TextField label="Password"/>
+                    <div className={classes.buttonBox}>
+                        <Button className={classes.buttonLogin} variant="contained" color="primary">Submit</Button>
+                        <Button className={classes.buttonLogin} variant="outlined" color="primary">Register</Button>
+                    </div>                    
                 </FormControl>
+
+                
             </div>
         </div>
     );
