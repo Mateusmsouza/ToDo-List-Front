@@ -8,11 +8,9 @@ import Login from "./screens/Login"
 export default function Routes () {
     return (
         <BrowserRouter>
-            <switch>
-                <Route path="/">
-                    <Login/>
-                </Route>                
-            </switch>
+            <Route path="/">
+                <Login/>
+            </Route>                
         </BrowserRouter>
     );
 }

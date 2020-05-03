@@ -2,7 +2,6 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { FormControl, FormHelperText, Button } from '@material-ui/core';
 import TextField from "@material-ui/core/TextField";
-import Switch from '@material-ui/core/Switch';
 
 const useStyles = makeStyles({
     background:{
@@ -39,13 +38,6 @@ const useStyles = makeStyles({
 
 const Login = props => {
     const classes = useStyles();
-    const [state, setState] = React.useState({
-        hasAccount: true,
-    });
-    
-    const handleChange = (event) => {
-        setState({ ...state, [event.target.name]: event.target.checked });
-      };
 
     return (
         <div className={classes.background} >
@@ -54,14 +46,12 @@ const Login = props => {
                 <FormControl>
                     <FormHelperText variant="filled"  id="welcome-text">Simple ToDoList App</FormHelperText>
                     <TextField label="User"/>
-                    <TextField label="Password"/>
+                    <TextField label="Password" type="password"/>
                     <div className={classes.buttonBox}>
                         <Button className={classes.buttonLogin} variant="contained" color="primary">Submit</Button>
                         <Button className={classes.buttonLogin} variant="outlined" color="primary">Register</Button>
                     </div>                    
-                </FormControl>
-
-                
+                </FormControl>                
             </div>
         </div>
     );

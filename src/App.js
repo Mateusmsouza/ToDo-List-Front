@@ -1,15 +1,21 @@
 import React, { Component } from 'react';
-import Routes from './router';
+import { Provider } from 'react-redux';
 import CssBaseline from "@material-ui/core/CssBaseline";
+import Routes from './router';
+import store from './store';
 
 class App extends Component {
     render() {
         return (
-            <CssBaseline>
-                <div>
-                    <Routes/>  
-                </div>
-            </CssBaseline>
+            <div className="app">
+                <Provider store={store}>
+                    <CssBaseline>
+                        <div>
+                            <Routes/>  
+                        </div>
+                    </CssBaseline>
+                </Provider>
+            </div>
         );      
     }
 }
