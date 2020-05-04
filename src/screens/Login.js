@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-
+import { Alert } from '@material-ui/lab';
 import { makeStyles } from "@material-ui/core/styles";
 import { FormControl, FormHelperText, Button } from '@material-ui/core';
 import TextField from "@material-ui/core/TextField";
@@ -42,20 +42,39 @@ const useStyles = makeStyles({
 })
 
 const Login = props => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [warningMessage, setWarningMessage] = useState('');
+    const onLogin = (e) => {
+        if (username.length < 0 || password.length < 0) {
+            setWarningMessage('Please enteder username and password');
+        }
+
+        try {
+            login({username, password})
+        } catch (error) {
+            setWarningMessage(error.message)
+        }
+    }
     const classes = useStyles();
+
     const { login, logout } = props;
     const { user, key} = props; 
 
     return (
         <div className={classes.background} >
             <div className={classes.loginBox}>
-                <h1 className={classes.titleLogin}>Faire</h1>
+                    {warningMessage.length > 0 &&
+                        <Alert variant="filled" severity="warning">{warningMessage}</Alert>
+                    }
                 <FormControl>
+                    <h1 className={classes.titleLogin}>Faire</h1>
+
                     <FormHelperText variant="filled"  id="welcome-text">Simple ToDoList App</FormHelperText>
-                    <TextField label="User"/>
-                    <TextField label="Password" type="password"/>
+                    <TextField value={username} label="User" onChange={e => setUsername(e.target.value)}/>
+                    <TextField value={password} label="Password" type="password" onChange={e => setPassword(e.target.value)}/>
                     <div className={classes.buttonBox}>
-                        <Button className={classes.buttonLogin} variant="contained" color="primary" onClick={(e) => login({username: "mateus", email:"mateus_msouza@outlook.com"}, console.log(user))}>Submit</Button>
+                        <Button className={classes.buttonLogin} variant="contained" color="primary" onClick={e => onLogin(e)}>Submit</Button>
                         <Button className={classes.buttonLogin} variant="outlined" color="primary">Register</Button>
                     </div>                    
                 </FormControl>                

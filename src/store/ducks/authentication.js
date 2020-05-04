@@ -1,3 +1,5 @@
+import { login } from "../../api/authentication";
+
 /**
  * actions
  */
@@ -8,10 +10,18 @@ export const Type = {
 
 export const actions = {
     login: (user) => {
-        return {
-            type: Type.LOGIN,
-            user
-        };
+        console.log(`login user: ${user}`);
+        return login(user.username, user.password)
+        .then( response => {
+            console.log(response);
+            return {
+                type: Type.LOGIN,
+                user: response.data,
+                key: response.headers.token
+            };
+        })
+
+        
     },
     logout: () => {
         return {
@@ -23,7 +33,6 @@ export const actions = {
 /**
  * reducer
  */
-
 const INITIAL_STATE = {
     key: '',
     user: {}
