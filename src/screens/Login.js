@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
+//import { bindActionCreators } from "redux";
 import { Alert } from '@material-ui/lab';
 import { makeStyles } from "@material-ui/core/styles";
 import { FormControl, FormHelperText, Button } from '@material-ui/core';
 import TextField from "@material-ui/core/TextField";
 
-import { actions as authenticationActions } from "../store/ducks/authentication";
+import {login, logout} from "../store/ducks/authentication";
 
 const useStyles = makeStyles({
     background:{
@@ -42,6 +42,10 @@ const useStyles = makeStyles({
 })
 
 const Login = props => {
+    console.log(props);
+    const { login, logout } = props;
+    console.log(login)
+    const { user, key} = props;
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [warningMessage, setWarningMessage] = useState('');
@@ -53,13 +57,11 @@ const Login = props => {
         try {
             login({username, password})
         } catch (error) {
+            console.log(error);
             setWarningMessage(error.message)
         }
     }
     const classes = useStyles();
-
-    const { login, logout } = props;
-    const { user, key} = props; 
 
     return (
         <div className={classes.background} >
@@ -88,9 +90,7 @@ const mapsStateToProps = state => ({
         user: state.user
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators(authenticationActions, dispatch);
-
 export default connect(
     mapsStateToProps,
-    mapDispatchToProps
+    {login}
 )(Login);
