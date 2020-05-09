@@ -10,20 +10,17 @@ export const Type = {
 
 
 export const login = user => {
-        console.log("outside dispatch");
-        return (dispatch, getState) => {
-            console.log("inside dispatch");
-            console.log(dispatch);
+        return dispatch => {
             return loginRequest(user.username, user.password)
             .then( response => {
-                console.log(response)
+                console.log(response);
                 dispatch({
                     type: Type.LOGIN,
                     user: response.data,
                     key: response.headers.token
                 })
+                window.location.href="/home"
             })
-            .catch( err => dispatch({type: Type.LOGIN}))
         }  
 }
 
@@ -35,21 +32,18 @@ export const logout = () => {
  * reducer
  */
 const INITIAL_STATE = {
-    key: '',
+    key: "",
     user: {}
 }
 
 export default function reducerAuthentication(state = INITIAL_STATE, action){
-    console.log(`reducer called by action ${action}`);
-    console.log(action)
     switch(action.type){
  
         case Type.LOGIN: {
-            console.log("login stuff")
             return {
                 ...state,
                 user: action.user,
-                key: action.key || ''
+                key: action.key || {}
             }
         }
 
@@ -60,7 +54,9 @@ export default function reducerAuthentication(state = INITIAL_STATE, action){
         }
         
         default: {
-            console.log("default stuff")
-            return state;}
+            return {
+                ... state
+            };
+        }
     }
 }

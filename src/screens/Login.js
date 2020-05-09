@@ -42,23 +42,20 @@ const useStyles = makeStyles({
 })
 
 const Login = props => {
-    console.log(props);
-    const { login, logout } = props;
-    console.log(login)
-    const { user, key} = props;
+    const { login } = props;
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [warningMessage, setWarningMessage] = useState('');
-    const onLogin = (e) => {
-        if (username.length < 0 || password.length < 0) {
+    const onLogin = event => {
+        if (username.length < 1 || password.length < 1) {
             setWarningMessage('Please enteder username and password');
-        }
-
-        try {
-            login({username, password})
-        } catch (error) {
-            console.log(error);
-            setWarningMessage(error.message)
+        } else {
+            try {
+                login({username, password})
+            } catch (error) {
+                console.log(error);
+                setWarningMessage(error.message)
+            }
         }
     }
     const classes = useStyles();
@@ -77,7 +74,7 @@ const Login = props => {
                     <TextField value={password} label="Password" type="password" onChange={e => setPassword(e.target.value)}/>
                     <div className={classes.buttonBox}>
                         <Button className={classes.buttonLogin} variant="contained" color="primary" onClick={e => onLogin(e)}>Submit</Button>
-                        <Button className={classes.buttonLogin} variant="outlined" color="primary">Register</Button>
+                        <Button className={classes.buttonLogin} variant="outlined" color="primary" onClick={e => window.location.href="/register"}>Register</Button>
                     </div>                    
                 </FormControl>                
             </div>
@@ -85,11 +82,12 @@ const Login = props => {
     );
 };
 
-const mapsStateToProps = state => ({
-        key: state.key,
-        user: state.user
-});
-
+const mapsStateToProps = state => {
+    return {
+        jwtToken: state.reducerAuthentication.key,
+        user: state.reducerAuthentication.key,
+    }
+}
 export default connect(
     mapsStateToProps,
     {login}
