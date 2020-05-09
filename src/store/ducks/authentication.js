@@ -21,6 +21,13 @@ export const login = user => {
                 })
                 window.location.href="/home"
             })
+            .catch( err => {
+                console.log(err.message)
+                dispatch({
+                    type: Type.LOGIN,
+                    apiErrors: err.message
+                })
+            })
         }  
 }
 
@@ -33,7 +40,8 @@ export const logout = () => {
  */
 const INITIAL_STATE = {
     key: "",
-    user: {}
+    user: {},
+    apiErrors: ""
 }
 
 export default function reducerAuthentication(state = INITIAL_STATE, action){
@@ -43,7 +51,8 @@ export default function reducerAuthentication(state = INITIAL_STATE, action){
             return {
                 ...state,
                 user: action.user,
-                key: action.key || {}
+                key: action.key,
+                apiErrors: action.apiErrors
             }
         }
 

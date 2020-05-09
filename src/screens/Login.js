@@ -14,10 +14,12 @@ const useStyles = makeStyles({
         height: '100vh',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        flexDirection: 'column'
         
     },
     loginBox: {
+        marginTop: 16,
         paddingTop: 64,
         paddingBottom: 64,
         paddingLeft: 64,
@@ -42,7 +44,8 @@ const useStyles = makeStyles({
 })
 
 const Login = props => {
-    const { login } = props;
+    const { login, apiErrors } = props;
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [warningMessage, setWarningMessage] = useState('');
@@ -62,10 +65,13 @@ const Login = props => {
 
     return (
         <div className={classes.background} >
-            <div className={classes.loginBox}>
-                    {warningMessage.length > 0 &&
+            {warningMessage.length > 0 &&
                         <Alert variant="filled" severity="warning">{warningMessage}</Alert>
-                    }
+            }
+            {apiErrors &&
+                        <Alert variant="filled" severity="error">{apiErrors}</Alert>
+            }
+            <div className={classes.loginBox}>
                 <FormControl>
                     <h1 className={classes.titleLogin}>Faire</h1>
 
@@ -85,7 +91,8 @@ const Login = props => {
 const mapsStateToProps = state => {
     return {
         jwtToken: state.reducerAuthentication.key,
-        user: state.reducerAuthentication.key,
+        user: state.reducerAuthentication.user,
+        apiErrors: state.reducerAuthentication.apiErrors
     }
 }
 export default connect(
