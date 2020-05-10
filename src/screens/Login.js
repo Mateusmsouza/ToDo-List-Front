@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-//import { bindActionCreators } from "redux";
 import { Alert } from '@material-ui/lab';
 import { makeStyles } from "@material-ui/core/styles";
-import { FormControl, FormHelperText, Button } from '@material-ui/core';
-import TextField from "@material-ui/core/TextField";
+import { FormControl, FormHelperText, Button, TextField } from '@material-ui/core';
 
 import {login, logout} from "../store/ducks/authentication";
 
