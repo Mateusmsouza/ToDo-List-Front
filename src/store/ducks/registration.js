@@ -11,7 +11,7 @@ export const register = user => {
     return dispatch => {
         return registration(user.username, user.password, user.email)
         .then( reponse => {
-            console.log(response)
+            console.log(reponse)
             dispatch({
                 action: Type.REGISTER
             })
@@ -35,17 +35,19 @@ export const register = user => {
      apiErrors: undefined,
  }
 
- export default function reducerRegistration(state = INITIAL_STATE, action){
-     switch (action.type) {
-         case Type.REGISTER:
+export default function reducerRegistration(state = INITIAL_STATE, action){
+    switch (action.type){
+
+        case Type.REGISTER:
             return {
                 ...state,
                 apiErrors: action.apiErrors
             }
      
-         default:
+        default: {
             return {
-                 ...state
+                ...state
             };
-     }
+        }
+    }
  }

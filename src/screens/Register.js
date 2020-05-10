@@ -1,6 +1,9 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import { FormControl, FormHelperText, Button, TextField } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
+import { register } from "../store/ducks/registration";
 
 const useStyles = makeStyles({
     background:{
@@ -32,39 +35,67 @@ const useStyles = makeStyles({
     buttonBox: {
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
         paddingTop: 8
     }
 })
 
 const Register = props => {
     const classes = useStyles();
+    const { register, apiErrors } = props;
 
-    const [username, setUserName] = useState('');
+    const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [registerScreenWarnings, setRegisterScreenWarnings] = useState('');
+
+    const onRegister = e => {
+        if (username.length < 1 || username.length < 1 || email.length < 1){
+            setRegisterScreenWarnings("Please, fill all required fields to resgiter an account.");
+        }else {
+            let user = {
+                username,
+                email,
+                password
+            }
+
+            register(user);
+        }
+    }
 
     return (
         <div className={classes.background}>
-            <div1 className={classes.registerBox}>
+            {apiErrors &&
+                        <Alert variant="filled" severity="error">{apiErrors}</Alert>
+            }
+            {registerScreenWarnings.length > 0 &&
+                        <Alert variant="filled" severity="warning">{registerScreenWarnings}</Alert>
+            }
+            <div className={classes.registerBox}>
                 <FormControl>
                     <h1 className={classes.titleLogin}>
                         Registration
                     </h1>
                     <FormHelperText>Just some infomation</FormHelperText>
                 
-                    <TextField label="name" required={true}></TextField>
-                    <TextField label="email" required={true}></TextField>
-                    <TextField label="password" type="password" required={true}></TextField>
+                    <TextField label="name" required={true} value={username} onChange={e => setUsername(e.target.value)}></TextField>
+                    <TextField label="email" required={true} value={email} onChange={e => setEmail(e.target.value)}></TextField>
+                    <TextField label="password" type="password" required={true} value={password} onChange={e => setPassword(e.target.value)}></TextField>
                     <div className={classes.buttonBox}>
-                        <Button color="primary" variant="contained">
-                            Apply
+                        <Button color="primary" variant="contained" onClick={onRegister}>
+                            Register
                         </Button>
                     </div>
                 </FormControl>
-            </div1>
+            </div>
         </div>
     )
 }
 
-export default Register;
+const mapsStateToProps = state => ({
+    apiErrors: state.reducerRegistration.apiErrors
+});
+export default connect(
+    mapsStateToProps,
+    { register }
+)(Register);

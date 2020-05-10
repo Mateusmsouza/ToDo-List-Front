@@ -4,7 +4,7 @@ import { Alert } from '@material-ui/lab';
 import { makeStyles } from "@material-ui/core/styles";
 import { FormControl, FormHelperText, Button, TextField } from '@material-ui/core';
 
-import {login, logout} from "../store/ducks/authentication";
+import { login } from "../store/ducks/authentication";
 
 const useStyles = makeStyles({
     background:{
