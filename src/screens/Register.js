@@ -3,7 +3,26 @@ import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import { FormControl, FormHelperText, Button, TextField } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
+
+
 import { register } from "../store/ducks/registration";
+
+const validateUsername = username => {
+    let validatedData = {
+        message: '',
+        value: username
+    }
+
+    if (username.indexOf(' ') < 0){
+        validatedData.message = 'username can not have spaces';
+    }
+
+    if (username.length > 50 || username.length < 3){
+        validatedData.message = 'username must have less than 200 characters and at least 3 characters';
+    }
+    
+    return validatedData
+}
 
 const useStyles = makeStyles({
     background:{
@@ -52,6 +71,10 @@ const Register = props => {
     const onRegister = e => {
         if (username.length < 1 || username.length < 1 || email.length < 1){
             setRegisterScreenWarnings("Please, fill all required fields to resgiter an account.");
+        } else if (username.indexOf(' ') > 0) {
+            setRegisterScreenWarnings("Username can't have spaces");
+        } else if (email.indexOf('@') < 0 ) {
+            setRegisterScreenWarnings("Include valid e-mail");
         }else {
             let user = {
                 username,
@@ -78,7 +101,11 @@ const Register = props => {
                     </h1>
                     <FormHelperText>Just some infomation</FormHelperText>
                 
-                    <TextField label="name" required={true} value={username} onChange={e => setUsername(e.target.value)}></TextField>
+                    <TextField 
+                        label="username" 
+                        required={true} 
+                        value={username.value}
+                        onChange={e => setUsername(e.target.value)}/>
                     <TextField label="email" required={true} value={email} onChange={e => setEmail(e.target.value)}></TextField>
                     <TextField label="password" type="password" required={true} value={password} onChange={e => setPassword(e.target.value)}></TextField>
                     <div className={classes.buttonBox}>

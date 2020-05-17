@@ -1,15 +1,11 @@
 import axios from 'axios';
 
-const URL_SERVER = 'http://127.0.0.1:8080';
+const URL_SERVER = 'http://localhost:8080';
 
-export const registration = (user) => {
-    return axios({
-        method: 'post',
-        url: `${URL_SERVER}/user`,
-        data: {
-            username: user.username,
-            password: user.password,
-            email: user.email
-        }
+export const registration = (name, password ,email) => {
+    return axios.post(`${URL_SERVER}/user`, {
+        name,
+        password,
+        email
     })
 }

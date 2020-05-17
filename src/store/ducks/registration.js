@@ -13,14 +13,14 @@ export const register = user => {
         .then( reponse => {
             console.log(reponse)
             dispatch({
-                action: Type.REGISTER
+                type: Type.REGISTER
             })
             window.location.href="/"
         })
         .catch( err => {
             console.log(err)
             dispatch({
-                action: Type.REGISTER,
+                type: Type.REGISTER,
                 apiErrors: err.message
             })
         })
