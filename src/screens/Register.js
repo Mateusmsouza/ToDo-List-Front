@@ -7,23 +7,6 @@ import { Alert } from '@material-ui/lab';
 
 import { register } from "../store/ducks/registration";
 
-const validateUsername = username => {
-    let validatedData = {
-        message: '',
-        value: username
-    }
-
-    if (username.indexOf(' ') < 0){
-        validatedData.message = 'username can not have spaces';
-    }
-
-    if (username.length > 50 || username.length < 3){
-        validatedData.message = 'username must have less than 200 characters and at least 3 characters';
-    }
-    
-    return validatedData
-}
-
 const useStyles = makeStyles({
     background:{
         background: 'linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,27,121,1) 25%, rgba(0,212,255,1) 97%)',

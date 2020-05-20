@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const URL_SERVER = 'http://127.0.0.1:8080';
+import { URL_SERVER } from "./server";
 
 export const login = (username, password) => {
     return axios({

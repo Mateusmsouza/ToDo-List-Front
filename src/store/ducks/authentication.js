@@ -64,7 +64,7 @@ export default function reducerAuthentication(state = INITIAL_STATE, action){
         
         default: {
             return {
-                ... state
+                ...state
             };
         }
     }
