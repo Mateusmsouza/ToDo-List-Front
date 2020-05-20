@@ -13,12 +13,12 @@ export const login = user => {
         return dispatch => {
             return loginRequest(user.username, user.password)
             .then( response => {
-                console.log(response);
                 dispatch({
                     type: Type.LOGIN,
                     user: response.data,
                     key: response.headers.token
                 })
+                localStorage.setItem("key", response.headers.token)
                 window.location.href="/home"
             })
             .catch( err => {
