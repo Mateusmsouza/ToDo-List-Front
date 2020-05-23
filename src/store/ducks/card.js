@@ -1,20 +1,24 @@
 import { 
-    createCard as create
+    createCard as create,
+    ListCards,
+    patchCard,
+    deleteCardById
  } from "../../api/card";
 
 /**
  * actions
  */
 export const Type = {
-    CREATE: "todolist/card/CREATE"
+    CREATE: "todolist/card/CREATE",
+    LIST: "todolist/card/LIST",
+    PATCH: "todolist/card/UPDATE",
+    DELETE: "todolist/card/DELETE"
 };
 
 export const createCard = card => {
-    console.log("inside action");
     return dispatch => {
-        console.log("inside dispatch");
         create(card)
-        .then( response => {
+        .then( _ => {
             dispatch({
                 type: Type.CREATE, 
             })
@@ -29,6 +33,59 @@ export const createCard = card => {
     }
 }
 
+export const listUserCards = () => {
+    return dispatch => {
+        ListCards()
+        .then( response => {
+            dispatch({
+                type: Type.LIST,
+                cards: response.data
+            })
+        })
+        .catch( err => {
+            dispatch({
+                type: Type.LIST,
+                apiErrors: err.message
+            })
+        })
+    }
+}
+
+export const updateCard = card => {
+    return dispatch => {
+        patchCard(card)
+        .then( _ => {
+            dispatch({
+                type: Type.PATCH
+            })
+        })
+        .catch( err => {
+            console.log(err.message);
+            dispatch({
+                type: Type.PATCH,
+                apiErrors: err.message
+            })
+        })
+    }
+}
+
+export const deleteCard = id => {
+    return dispatch => {
+        deleteCardById(id)
+        .then( _ => {
+            dispatch({
+                type: Type.DELETE
+            })
+        })
+        .catch( err => {
+            console.log(err.message);
+            dispatch({
+                type: Type.DELETE,
+                apiErrors: err.message
+            })
+        })
+    }
+}
 /**
  * reducer
  */
@@ -40,14 +97,32 @@ export const createCard = card => {
 
  export default function reducerCard(state = INITIAL_STATE, action){
      switch (action.type) {
-         case Type.CREATE:
+        case Type.CREATE:
              return {
+                ...state,
+                apiErrors: action.apiErrors
+             }
+        
+        case Type.LIST:
+            return {
                 ...state,
                 cards: action.cards,
                 apiErrors: action.apiErrors
-             }
-     
-         default:
+            }
+        
+        case Type.PATCH:
+            return {
+                ...state,
+                apiErrors: action.apiErrors
+            }
+        
+        case Type.DELETE:
+            return {
+                ...state,
+                apiErrors: action.apiErrors
+            }
+
+        default:
             return {
                 ...state
             };

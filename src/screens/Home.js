@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
-import { createCard as create } from "../store/ducks/card";
-import { FormControl, FormHelperText, Button, TextField } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import { Button, TextField, CardActions, Card, CardContent, Typography } from '@material-ui/core';
+import { 
+    createCard as create, 
+    listUserCards,
+    deleteCard,
+    updateCard } from "../store/ducks/card";
 
 const useStyles = makeStyles({
     background: {
@@ -14,39 +18,101 @@ const useStyles = makeStyles({
         flexDirection: 'column'
         
     },
-    displayFlexCentered: {
+    cardControl: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        marginBottom: 8
     },
     textField: {
         marginLeft: 8,
         marginRight: 8,
         marginTop: 8,
         marginBottom: 8
+    },
+    card: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        paddingTop: 8,
+        paddingBottom: 8
     }
+    
 
 })
 
 const Home = props => {
     const classes = useStyles();
-    const [cardName, setCardName] = useState('')
-    const [cardDescription, setCardDescription] = useState('')
-    const [cardBlocker, setCardBlocker] = useState(undefined) 
-    const items = [1, 2, 3, 4];
+    const {create, deleteCard, updateCard} = props;
+    const { cards } = props;
 
-    const createCard = e => {
+    const [cardName, setCardName] = useState('')
+    const [cardId, setCardId] = useState(null)
+    const [cardDescription, setCardDescription] = useState('')
+    const [cardStatus, setCardStatus] = useState(null)
+    const [cardBlocker, setCardBlocker] = useState(null)
+
+    const createCard = () => {
         const card = {
             name: cardName,
             description: cardDescription,
-            blockerCard: cardBlocker
+            blockerCard: cardBlocker,
+            cardStatus: cardStatus || "TODO"
         }
-        props.create(card)
+
+        create(card)
     }
+
+    const update = () => {
+        if (cardId == null) return;
+        const card = {
+            id: cardId,
+            name: cardName,
+            description: cardDescription,
+            blockerCard: cardBlocker,
+            cardStatus: cardStatus || "TODO"
+        }
+
+        updateCard(card);
+        setCardId(null)
+    }
+
+    const createOrUpdate = e => {
+        if (cardId == null){
+            createCard();
+        } else {
+            update();
+        }
+    }
+
+    const handleBockerChange = blocker => {
+        if(blocker) {
+            setCardBlocker(blocker)
+        } else {
+            setCardBlocker(null)
+        }
+    }
+
+    const fillEditCard = id => {
+        var pickedCard;
+        cards.filter( card => {
+            if (card.id == id) pickedCard = card; 
+        })
+        setCardId(id);
+        setCardName(pickedCard.name);
+        setCardDescription(pickedCard.description);
+        setCardBlocker(pickedCard.blockerCard);
+    }
+
+    useEffect( () => {
+        props.listUserCards();
+      }, [])
+    
     return (
         <div classes={classes.background}>
-            <div className={classes.displayFlexCentered}>
+            <div className={classes.cardControl}>
                 <div >
                     <TextField
                         className={classes.textField} 
@@ -61,33 +127,54 @@ const Home = props => {
                         required={true}
                         value={cardDescription}
                         onChange={e => setCardDescription(e.target.value)}/>
-                    
+                                    
                     <Autocomplete
                     id="cardBlocker"
-                    options={["1","2","3","4","5"]}
+                    value={cardBlocker}
+                    options={cards}
+                    getOptionLabel={option => option.name}
+                    getOptionSelected={(option, value) => {return option.id == value.id}}
+                    onChange={(event, value) => handleBockerChange(value)}
                     renderInput={(params) => (
-                    <TextField {...params} value={cardBlocker} onChange={e => setCardBlocker(e.target.value)} label="Card Blocker" margin="normal" variant="outlined" />
+                    <TextField value={cardBlocker ? cardBlocker.name : ""} {...params} label="Card Blocker" margin="normal" variant="outlined" />
                     )}/>
                 </div>
                 <Button 
-                    onClick={createCard}
+                    onClick={createOrUpdate}
                     color="primary" 
                     variant="contained">
                         Create
                 </Button>
             </div>
-
-            {items.map( item => <h1 key={item}>item</h1>)}
+                                
+            {cards.map( card => (
+            <Card className={ classes.card } variant="outlined" key={card.id}>
+            <CardContent>
+                <Typography variant="h5" component="h2">{`#${card.id} - ${card.name}`}</Typography>
+                <Typography className={classes.title} color="textSecondary" gutterBottom>{card.description}</Typography>
+                <Typography className={classes.pos} color="textSecondary">{card.status}</Typography>
+                <Typography variant="body2" component="p">
+                blocked by: {card.blockerCard ? `#${card.blockerCard.id} - ${card.blockerCard.name}` : ""}</Typography>
+            </CardContent>
+            <CardActions>
+                <Button size="small" color="primary" variant="contained" onClick={
+                    e => fillEditCard(card.id)
+                }>Edit</Button>
+                <Button size="small" onClick={e => deleteCard(card.id)}>Delete</Button>
+                <Button size="small">Mark as Done</Button>
+            </CardActions>
+            </Card>))}
         </div>
     )
 }
 
 const mapsStateToProps = state => {
     return {
+        cards: state.reducerCard.cards,
         apiErrors: state.reducerCard.apiErrors
     }
 }
 export default connect(
     mapsStateToProps,
-    {create}
+    { create, listUserCards, updateCard, deleteCard}
 )(Home);
