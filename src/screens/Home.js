@@ -38,6 +38,9 @@ const useStyles = makeStyles({
         flexDirection: 'column',
         paddingTop: 8,
         paddingBottom: 8
+    },
+    button: {
+        margin: 8
     }
     
 
@@ -76,7 +79,8 @@ const Home = props => {
         }
 
         updateCard(card);
-        setCardId(null)
+        setCardId(null);
+        setCardStatus(null);
     }
 
     const createOrUpdate = e => {
@@ -85,6 +89,17 @@ const Home = props => {
         } else {
             update();
         }
+    }
+
+    const markAsDone = id => {
+        console.log('here')
+        var pickedCard;
+        cards.filter( card => {
+            if (card.id == id) pickedCard = card; 
+        })
+
+        setCardStatus("DONE");
+        update();
     }
 
     const handleBockerChange = blocker => {
@@ -157,11 +172,11 @@ const Home = props => {
                 blocked by: {card.blockerCard ? `#${card.blockerCard.id} - ${card.blockerCard.name}` : ""}</Typography>
             </CardContent>
             <CardActions>
-                <Button size="small" color="primary" variant="contained" onClick={
+                <Button className={classes.button} size="small" color="primary" variant="contained" onClick={
                     e => fillEditCard(card.id)
                 }>Edit</Button>
-                <Button size="small" onClick={e => deleteCard(card.id)}>Delete</Button>
-                <Button size="small">Mark as Done</Button>
+                <Button className={classes.button} size="small" onClick={e => deleteCard(card.id)}>Delete</Button>
+                <Button className={classes.button} size="small" onClick={e => markAsDone(card.id)}>Mark as Done</Button>
             </CardActions>
             </Card>))}
         </div>
