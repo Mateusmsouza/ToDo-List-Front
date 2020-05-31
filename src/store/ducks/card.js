@@ -54,7 +54,8 @@ export const listUserCards = () => {
 export const updateCard = card => {
     return dispatch => {
         patchCard(card)
-        .then( _ => {
+        .then( response => {
+            console.log(response);
             dispatch({
                 type: Type.PATCH
             })

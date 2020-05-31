@@ -28,7 +28,7 @@ export const patchCard = card => {
         name: card.name,
         description: card.description,
         blockerCard: card.blockerCard,
-        status: card.status
+        status: card.cardStatus
     }, 
     {headers: {
         Authorization: `Bearer ${key}`

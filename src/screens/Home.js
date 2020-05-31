@@ -56,13 +56,20 @@ const Home = props => {
     const [cardDescription, setCardDescription] = useState('')
     const [cardStatus, setCardStatus] = useState(null)
     const [cardBlocker, setCardBlocker] = useState(null)
+    
+    const findCardById = id => {
+        var pickedCard;
+        cards.filter( card => {
+            if (card.id == id) pickedCard = card; 
+        })
+        return pickedCard;
+    }
 
     const createCard = () => {
         const card = {
             name: cardName,
             description: cardDescription,
-            blockerCard: cardBlocker,
-            cardStatus: cardStatus || "TODO"
+            blockerCard: cardBlocker
         }
 
         create(card)
@@ -70,12 +77,13 @@ const Home = props => {
 
     const update = () => {
         if (cardId == null) return;
+        
         const card = {
             id: cardId,
             name: cardName,
             description: cardDescription,
             blockerCard: cardBlocker,
-            cardStatus: cardStatus || "TODO"
+            cardStatus: cardStatus
         }
 
         updateCard(card);
@@ -84,41 +92,27 @@ const Home = props => {
     }
 
     const createOrUpdate = e => {
-        if (cardId == null){
-            createCard();
-        } else {
-            update();
-        }
+        if (cardId == null) createCard()
+        else update()
     }
 
     const markAsDone = id => {
-        console.log('here')
-        var pickedCard;
-        cards.filter( card => {
-            if (card.id == id) pickedCard = card; 
-        })
-
-        setCardStatus("DONE");
-        update();
-    }
-
-    const handleBockerChange = blocker => {
-        if(blocker) {
-            setCardBlocker(blocker)
-        } else {
-            setCardBlocker(null)
-        }
+        let card = findCardById(id);
+        card.cardStatus = "DONE";
+        updateCard(card);
     }
 
     const fillEditCard = id => {
-        var pickedCard;
-        cards.filter( card => {
-            if (card.id == id) pickedCard = card; 
-        })
-        setCardId(id);
-        setCardName(pickedCard.name);
-        setCardDescription(pickedCard.description);
-        setCardBlocker(pickedCard.blockerCard);
+        const card = findCardById(id);
+        setCardId(card.id);
+        setCardName(card.name);
+        setCardDescription(card.description);
+        setCardBlocker(card.blockerCard);
+    }
+
+    const handleBlockerChange = blocker => {
+        if(blocker) setCardBlocker(blocker)
+        else setCardBlocker(null)
     }
 
     useEffect( () => {
@@ -149,7 +143,7 @@ const Home = props => {
                     options={cards}
                     getOptionLabel={option => option.name}
                     getOptionSelected={(option, value) => {return option.id == value.id}}
-                    onChange={(event, value) => handleBockerChange(value)}
+                    onChange={(event, value) => handleBlockerChange(value)}
                     renderInput={(params) => (
                     <TextField value={cardBlocker ? cardBlocker.name : ""} {...params} label="Card Blocker" margin="normal" variant="outlined" />
                     )}/>
@@ -170,6 +164,8 @@ const Home = props => {
                 <Typography className={classes.pos} color="textSecondary">{card.status}</Typography>
                 <Typography variant="body2" component="p">
                 blocked by: {card.blockerCard ? `#${card.blockerCard.id} - ${card.blockerCard.name}` : ""}</Typography>
+                <Typography variant="body2" component="p">
+                status: {card.status ? card.status : "TO DO"}</Typography>
             </CardContent>
             <CardActions>
                 <Button className={classes.button} size="small" color="primary" variant="contained" onClick={
