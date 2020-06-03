@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import CreateOrUpdateCard from "../components/CreateOrUpdateCard";
 import { Button, TextField, CardActions, Card, CardContent, Typography } from '@material-ui/core';
 import { 
     createCard as create, 
     listUserCards,
     deleteCard,
-    updateCard } from "../store/ducks/card";
+    updateCard,
+    updateSelectedCard } from "../store/ducks/card";
 
 const useStyles = makeStyles({
     background: {
@@ -48,14 +49,8 @@ const useStyles = makeStyles({
 
 const Home = props => {
     const classes = useStyles();
-    const {create, deleteCard, updateCard} = props;
+    const { deleteCard, updateCard, updateSelectedCard } = props;
     const { cards } = props;
-
-    const [cardName, setCardName] = useState('')
-    const [cardId, setCardId] = useState(null)
-    const [cardDescription, setCardDescription] = useState('')
-    const [cardStatus, setCardStatus] = useState(null)
-    const [cardBlocker, setCardBlocker] = useState(null)
     
     const findCardById = id => {
         var pickedCard;
@@ -63,37 +58,6 @@ const Home = props => {
             if (card.id == id) pickedCard = card; 
         })
         return pickedCard;
-    }
-
-    const createCard = () => {
-        const card = {
-            name: cardName,
-            description: cardDescription,
-            blockerCard: cardBlocker
-        }
-
-        create(card)
-    }
-
-    const update = () => {
-        if (cardId == null) return;
-        
-        const card = {
-            id: cardId,
-            name: cardName,
-            description: cardDescription,
-            blockerCard: cardBlocker,
-            cardStatus: cardStatus
-        }
-
-        updateCard(card);
-        setCardId(null);
-        setCardStatus(null);
-    }
-
-    const createOrUpdate = e => {
-        if (cardId == null) createCard()
-        else update()
     }
 
     const markAsDone = id => {
@@ -104,15 +68,7 @@ const Home = props => {
 
     const fillEditCard = id => {
         const card = findCardById(id);
-        setCardId(card.id);
-        setCardName(card.name);
-        setCardDescription(card.description);
-        setCardBlocker(card.blockerCard);
-    }
-
-    const handleBlockerChange = blocker => {
-        if(blocker) setCardBlocker(blocker)
-        else setCardBlocker(null)
+        updateSelectedCard(card);
     }
 
     useEffect( () => {
@@ -121,41 +77,8 @@ const Home = props => {
     
     return (
         <div classes={classes.background}>
-            <div className={classes.cardControl}>
-                <div >
-                    <TextField
-                        className={classes.textField} 
-                        label="card name" 
-                        required={true}
-                        value={cardName}
-                        onChange={e => setCardName(e.target.value)}/>
-                    
-                    <TextField
-                        className={classes.textField}
-                        label="card description" 
-                        required={true}
-                        value={cardDescription}
-                        onChange={e => setCardDescription(e.target.value)}/>
-                                    
-                    <Autocomplete
-                    id="cardBlocker"
-                    value={cardBlocker}
-                    options={cards}
-                    getOptionLabel={option => option.name}
-                    getOptionSelected={(option, value) => {return option.id == value.id}}
-                    onChange={(event, value) => handleBlockerChange(value)}
-                    renderInput={(params) => (
-                    <TextField value={cardBlocker ? cardBlocker.name : ""} {...params} label="Card Blocker" margin="normal" variant="outlined" />
-                    )}/>
-                </div>
-                <Button 
-                    onClick={createOrUpdate}
-                    color="primary" 
-                    variant="contained">
-                        Create
-                </Button>
-            </div>
-                                
+            <CreateOrUpdateCard/>
+
             {cards.map( card => (
             <Card className={ classes.card } variant="outlined" key={card.id}>
             <CardContent>
@@ -182,10 +105,11 @@ const Home = props => {
 const mapsStateToProps = state => {
     return {
         cards: state.reducerCard.cards,
+        selectedCard: state.reducerCard.selectedCard,
         apiErrors: state.reducerCard.apiErrors
     }
 }
 export default connect(
     mapsStateToProps,
-    { create, listUserCards, updateCard, deleteCard}
+    { create, listUserCards, updateCard, deleteCard, updateSelectedCard}
 )(Home);

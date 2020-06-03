@@ -12,7 +12,8 @@ export const Type = {
     CREATE: "todolist/card/CREATE",
     LIST: "todolist/card/LIST",
     PATCH: "todolist/card/UPDATE",
-    DELETE: "todolist/card/DELETE"
+    DELETE: "todolist/card/DELETE",
+    UPDATE_SELECTED_CARD: "todolist/card/UPDATE_SELECTED_CARD"
 };
 
 export const createCard = card => {
@@ -55,7 +56,6 @@ export const updateCard = card => {
     return dispatch => {
         patchCard(card)
         .then( response => {
-            console.log(response);
             dispatch({
                 type: Type.PATCH
             })
@@ -87,45 +87,63 @@ export const deleteCard = id => {
         })
     }
 }
+
+export const updateSelectedCard = selectedCard => {
+    return {
+        type: Type.UPDATE_SELECTED_CARD,
+        selectedCard
+    };
+};
 /**
  * reducer
  */
+const baseSelectedCard = {
+    name: "",
+    description: "",
+    status: "",
+    blockerCard: {}
+}
 
- const INITIAL_STATE = {
+const INITIAL_STATE = {
      cards: [],
+     selectedCard: baseSelectedCard,
      apiErrors: ""
  }
 
  export default function reducerCard(state = INITIAL_STATE, action){
-     switch (action.type) {
+    switch (action.type) {
         case Type.CREATE:
-             return {
+            return {
                 ...state,
                 apiErrors: action.apiErrors
-             }
+            };
         
         case Type.LIST:
             return {
                 ...state,
                 cards: action.cards,
                 apiErrors: action.apiErrors
-            }
+            };
         
         case Type.PATCH:
             return {
                 ...state,
                 apiErrors: action.apiErrors
-            }
+            };
         
+        case Type.UPDATE_SELECTED_CARD:
+            return {
+                ...state,
+                selectedCard: action.selectedCard || baseSelectedCard
+            };
+
         case Type.DELETE:
             return {
                 ...state,
                 apiErrors: action.apiErrors
-            }
+            };
 
         default:
-            return {
-                ...state
-            };
-     }
+            return state;
+    }
  }
