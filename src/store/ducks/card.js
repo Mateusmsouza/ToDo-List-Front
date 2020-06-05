@@ -18,6 +18,11 @@ export const Type = {
 
 export const createCard = card => {
     return dispatch => {
+        
+        if (!card.blockerCard.id){
+            card.blockerCard = null;
+        }
+
         create(card)
         .then( _ => {
             dispatch({
@@ -55,7 +60,7 @@ export const listUserCards = () => {
 export const updateCard = card => {
     return dispatch => {
         patchCard(card)
-        .then( response => {
+        .then( _ => {
             dispatch({
                 type: Type.PATCH
             })

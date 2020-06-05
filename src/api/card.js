@@ -30,15 +30,15 @@ export const patchCard = card => {
         blockerCard: card.blockerCard,
         status: card.cardStatus
     }, 
-    {headers: {
+    { headers: {
         Authorization: `Bearer ${key}`
     }})
 }
 
 export const deleteCardById = id => {
     const key = localStorage.getItem("key");
-    return axios.patch(`${URL_SERVER}/card/${id}`,
-    {headers: {
+    return axios.delete(`${URL_SERVER}/card/${id}`,
+    { headers: {
         Authorization: `Bearer ${key}`
     }})
 }

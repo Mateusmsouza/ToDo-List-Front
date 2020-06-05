@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 
 import { 
-    createCard as create, 
+    createCard, 
     updateCard,
     updateSelectedCard} from "../store/ducks/card";
 
@@ -28,7 +28,8 @@ const useStyles = makeStyles({
 const CreateOrUpdateCard = props => {
     const classes = useStyles();
     const { 
-        create, 
+        createCard,
+        updateCard, 
         cards,
         selectedCard,
         updateSelectedCard
@@ -39,36 +40,11 @@ const CreateOrUpdateCard = props => {
         description, 
         cardBlocker 
     } = selectedCard;
-    // const createCard = () => {
-    //     const card = {
-    //         name: cardName,
-    //         description: cardDescription,
-    //         blockerCard: cardBlocker
-    //     }
 
-    //     create(card)
-    // }
-
-    // const update = () => {
-    //     if (cardId == null) return;
-        
-    //     const card = {
-    //         id: cardId,
-    //         name: cardName,
-    //         description: cardDescription,
-    //         blockerCard: cardBlocker,
-    //         cardStatus: cardStatus
-    //     }
-
-    //     updateCard(card);
-    //     setCardId(null);
-    //     setCardStatus(null);
-    // }
-
-    // const createOrUpdate = e => {
-    //     if (cardId == null) createCard()
-    //     else update()
-    // }
+    const createOrUpdate = id => {
+        if (id) updateCard(selectedCard)
+        else createCard(selectedCard)
+    }
 
     const typeUpdates = {
         name: "name",
@@ -138,7 +114,7 @@ const CreateOrUpdateCard = props => {
         </div>
 
         <Button 
-            //onClick={createOrUpdate}
+            onClick={(e) => createOrUpdate(selectedCard.id)}
             color="primary" 
             variant="contained">
                 Create
@@ -155,5 +131,5 @@ const mapsStateToProps = state => {
 }
 export default connect(
     mapsStateToProps,
-    { create, updateCard, updateSelectedCard}
+    { createCard, updateCard, updateSelectedCard}
 )(CreateOrUpdateCard);
