@@ -16,28 +16,13 @@ export const Type = {
     UPDATE_SELECTED_CARD: "todolist/card/UPDATE_SELECTED_CARD"
 };
 
-export const createCard = card => {
-    return dispatch => {
-        
-        if (!card.blockerCard.id){
-            card.blockerCard = null;
-        }
-
-        create(card)
-        .then( _ => {
-            dispatch({
-                type: Type.CREATE, 
-            })
-        })
-        .catch( err => {
-            console.log(err.message)
-            dispatch({
-                type: Type.CREATE,
-                apiErrors: err.message
-            })
-        })
+const onUnauthorizedSendToHome = (err) => {
+    console.log(err);
+    if(err.response.status === 401){
+        console.log("p fora do app")
+        //window.location.href = "/"
     }
-}
+} 
 
 export const listUserCards = () => {
     return dispatch => {
@@ -49,8 +34,27 @@ export const listUserCards = () => {
             })
         })
         .catch( err => {
+            onUnauthorizedSendToHome(err);
             dispatch({
                 type: Type.LIST,
+                apiErrors: err.message
+            })
+        })
+    }
+}
+
+export const createCard = card => {
+    return dispatch => {
+        create(card)
+        .then( _ => {
+            dispatch(listUserCards());
+        })
+        .catch( err => {
+            onUnauthorizedSendToHome(err);
+            console.log(err.message)
+            dispatch(listUserCards())
+            dispatch({
+                type: Type.CREATE,
                 apiErrors: err.message
             })
         })
@@ -61,11 +65,10 @@ export const updateCard = card => {
     return dispatch => {
         patchCard(card)
         .then( _ => {
-            dispatch({
-                type: Type.PATCH
-            })
+            dispatch(listUserCards());
         })
         .catch( err => {
+            onUnauthorizedSendToHome(err);
             console.log(err.message);
             dispatch({
                 type: Type.PATCH,
@@ -79,11 +82,10 @@ export const deleteCard = id => {
     return dispatch => {
         deleteCardById(id)
         .then( _ => {
-            dispatch({
-                type: Type.DELETE
-            })
+            dispatch(listUserCards());
         })
         .catch( err => {
+            onUnauthorizedSendToHome(err);
             console.log(err.message);
             dispatch({
                 type: Type.DELETE,

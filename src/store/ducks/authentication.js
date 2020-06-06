@@ -32,7 +32,13 @@ export const login = user => {
 }
 
 export const logout = () => {
-        return dispatch =>  dispatch({type: Type.LOGOUT})
+        return dispatch =>  {
+            localStorage.removeItem("key")
+            window.location.href="/"
+            dispatch({
+                type: Type.LOGOUT
+            })
+        }
 }
 
 /**

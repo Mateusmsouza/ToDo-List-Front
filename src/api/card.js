@@ -1,12 +1,17 @@
 import axios from 'axios';
 import { URL_SERVER } from "./server";
 
+const getIdNullIfEmptyCardBlocker = card => {
+    if(card.blockerCard && card.blockerCard.id) return card.blockerCard
+    else return null;
+}
+
 export const createCard = card => {
     const key = localStorage.getItem("key");
     return axios.post(`${URL_SERVER}/card`, {
         name: card.name,
         description: card.description,
-        blockerCard: card.blockerCard
+        blockerCard: getIdNullIfEmptyCardBlocker(card)
     }, 
     {headers: {
         Authorization: `Bearer ${key}`
@@ -27,7 +32,7 @@ export const patchCard = card => {
         id: card.id,
         name: card.name,
         description: card.description,
-        blockerCard: card.blockerCard,
+        blockerCard: getIdNullIfEmptyCardBlocker(card),
         status: card.cardStatus
     }, 
     { headers: {

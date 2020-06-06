@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
-import CreateOrUpdateCard from "../components/CreateOrUpdateCard";
-import { Button, TextField, CardActions, Card, CardContent, Typography } from '@material-ui/core';
+import CreateOrUpdateCard from "../components/createOrUpdateCard";
+import AppBarTodolist from "../components/appBar";
+import { Button, CardActions, Card, CardContent, Typography } from '@material-ui/core';
 import { 
     createCard as create, 
     listUserCards,
@@ -77,6 +78,7 @@ const Home = props => {
     
     return (
         <div classes={classes.background}>
+            <AppBarTodolist/>
             <CreateOrUpdateCard/>
 
             {cards.map( card => (

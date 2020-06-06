@@ -117,7 +117,7 @@ const CreateOrUpdateCard = props => {
             onClick={(e) => createOrUpdate(selectedCard.id)}
             color="primary" 
             variant="contained">
-                Create
+                Create/Update
         </Button>
     </div>
 )}
