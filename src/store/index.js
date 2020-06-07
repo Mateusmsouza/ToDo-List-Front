@@ -4,7 +4,8 @@ import thunk from "redux-thunk";
 
 
 const enhancer = () => {
-    return compose(applyMiddleware(thunk), window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+    // , window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    return compose(applyMiddleware(thunk));
 }
 
 const store = createStore(reducers, enhancer());
