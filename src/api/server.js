@@ -1,1 +1,1 @@
-export const URL_SERVER = "https://todolistservice.herokuapp.com/";
+export const URL_SERVER = "https://todolistservice.herokuapp.com";
