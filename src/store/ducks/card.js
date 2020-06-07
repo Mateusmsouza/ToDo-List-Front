@@ -19,8 +19,7 @@ export const Type = {
 const onUnauthorizedSendToHome = (err) => {
     console.log(err);
     if(err.response.status === 401){
-        console.log("p fora do app")
-        //window.location.href = "/"
+        window.location.href = "/"
     }
 } 
 
