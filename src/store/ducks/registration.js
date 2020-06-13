@@ -18,10 +18,10 @@ export const register = user => {
             window.location.href="/"
         })
         .catch( err => {
-            console.log(err)
+            const { data } = err.response;
             dispatch({
                 type: Type.REGISTER,
-                apiErrors: err.message
+                apiErrors: data.message || err.message
             })
         })
     }

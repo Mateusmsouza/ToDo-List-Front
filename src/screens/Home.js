@@ -3,13 +3,15 @@ import { connect } from "react-redux";
 import { makeStyles } from "@material-ui/core/styles";
 import CreateOrUpdateCard from "../components/createOrUpdateCard";
 import AppBarTodolist from "../components/appBar";
+import SimpleSnackbar from "../components/snakBar";
 import { Button, CardActions, Card, CardContent, Typography } from '@material-ui/core';
 import { 
     createCard as create, 
     listUserCards,
     deleteCard,
     updateCard,
-    updateSelectedCard } from "../store/ducks/card";
+    updateSelectedCard,
+    cleanApiErrors } from "../store/ducks/card";
 
 const useStyles = makeStyles({
     background: {
@@ -50,7 +52,7 @@ const useStyles = makeStyles({
 
 const Home = props => {
     const classes = useStyles();
-    const { deleteCard, updateCard, updateSelectedCard } = props;
+    const { deleteCard, updateCard, updateSelectedCard, cleanApiErrors, apiErrors } = props;
     const { cards } = props;
     
     const findCardById = id => {
@@ -71,6 +73,8 @@ const Home = props => {
         const card = findCardById(id);
         updateSelectedCard(card);
     }
+
+    const cleanErrors = () => cleanApiErrors();
 
     useEffect( () => {
         props.listUserCards();
@@ -100,6 +104,8 @@ const Home = props => {
                 <Button className={classes.button} size="small" onClick={e => markAsDone(card.id)}>Mark as Done</Button>
             </CardActions>
             </Card>))}
+            
+            <SimpleSnackbar/>
         </div>
     )
 }
@@ -113,5 +119,5 @@ const mapsStateToProps = state => {
 }
 export default connect(
     mapsStateToProps,
-    { create, listUserCards, updateCard, deleteCard, updateSelectedCard}
+    { create, listUserCards, updateCard, deleteCard, updateSelectedCard, cleanApiErrors}
 )(Home);

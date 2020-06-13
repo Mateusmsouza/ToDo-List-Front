@@ -13,7 +13,8 @@ export const Type = {
     LIST: "todolist/card/LIST",
     PATCH: "todolist/card/UPDATE",
     DELETE: "todolist/card/DELETE",
-    UPDATE_SELECTED_CARD: "todolist/card/UPDATE_SELECTED_CARD"
+    UPDATE_SELECTED_CARD: "todolist/card/UPDATE_SELECTED_CARD",
+    CLEAN_API_ERRORS: "todolist/card/CLEAN_API_ERRORS"
 };
 
 const onUnauthorizedSendToHome = (err) => {
@@ -34,9 +35,10 @@ export const listUserCards = () => {
         })
         .catch( err => {
             onUnauthorizedSendToHome(err);
+            const { data } = err.response;
             dispatch({
                 type: Type.LIST,
-                apiErrors: err.message
+                apiErrors: data.message || err.message
             })
         })
     }
@@ -50,11 +52,11 @@ export const createCard = card => {
         })
         .catch( err => {
             onUnauthorizedSendToHome(err);
-            console.log(err.message)
+            const { data } = err.response;
             dispatch(listUserCards())
             dispatch({
                 type: Type.CREATE,
-                apiErrors: err.message
+                apiErrors: data.message || err.message
             })
         })
     }
@@ -68,10 +70,10 @@ export const updateCard = card => {
         })
         .catch( err => {
             onUnauthorizedSendToHome(err);
-            console.log(err.message);
+            const { data } = err.response;
             dispatch({
                 type: Type.PATCH,
-                apiErrors: err.message
+                apiErrors: data.message || err.message
             })
         })
     }
@@ -85,10 +87,10 @@ export const deleteCard = id => {
         })
         .catch( err => {
             onUnauthorizedSendToHome(err);
-            console.log(err.message);
+            const { data } = err.response;
             dispatch({
                 type: Type.DELETE,
-                apiErrors: err.message
+                apiErrors: data.message || err.message
             })
         })
     }
@@ -100,6 +102,13 @@ export const updateSelectedCard = selectedCard => {
         selectedCard
     };
 };
+
+export const cleanApiErrors = () => {
+    return {
+        type: Type.CLEAN_API_ERRORS,
+        apiErrors: ""
+    }
+}
 /**
  * reducer
  */
@@ -148,8 +157,14 @@ const INITIAL_STATE = {
                 ...state,
                 apiErrors: action.apiErrors
             };
-
-        default:
+        
+        case Type.CLEAN_API_ERRORS:
+            return {
+                ...state,
+                apiErrors: action.apiErrors
+            }
+  
+          default:
             return state;
     }
  }
