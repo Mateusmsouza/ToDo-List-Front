@@ -101,7 +101,8 @@ const Home = props => {
                     e => fillEditCard(card.id)
                 }>Edit</Button>
                 <Button className={classes.button} size="small" onClick={e => deleteCard(card.id)}>Delete</Button>
-                <Button className={classes.button} size="small" onClick={e => markAsDone(card.id)}>Mark as Done</Button>
+                <Button className={classes.button} size="small" onClick={e => markAsDone(card.id)}
+                disabled={card.blockerCard && card.blockerCard.status != "DONE"}>Mark as Done</Button>
             </CardActions>
             </Card>))}
             
